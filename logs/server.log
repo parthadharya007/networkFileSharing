@@ -2,6 +2,6 @@
 [2025-11-09 00:54:14] admin GET welcome.txt
 [2025-11-09 00:54:57] admin PUT doom.jpeg (10982 bytes)
 [2025-11-09 00:55:11] Client disconnected: admin
-[2025-11-09 00:55:46] LOGIN OK: omm
-[2025-11-09 00:56:11] omm GET doom.jpeg
-[2025-11-09 01:03:35] Client disconnected: omm
+[2025-11-09 00:55:46] LOGIN OK: sonu
+[2025-11-09 00:56:11] sonu GET doom.jpeg
+[2025-11-09 01:03:35] Client disconnected: sonu
