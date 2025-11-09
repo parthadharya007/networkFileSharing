@@ -1,0 +1,39 @@
+
+1. File Transfer Protocol (FTP):
+
+    Description: A standard network protocol for transferring files between a client and a server on a computer network. It uses separate control and data connections.
+    Features: Supports uploading, downloading, and managing files and directories.
+    Security: Inherently insecure as data, including credentials, is transmitted in clear text. 
+
+2. Secure File Transfer Protocol (SFTP):
+
+    Description: A secure variant of FTP that uses SSH (Secure Shell) for encryption and authentication.
+    Features: Provides secure file transfer, remote file system management, and command execution over a single connection.
+    Security: Offers robust encryption, protecting data and credentials during transfer. 
+
+3. FTP Secure (FTPS):
+
+    Description: Another secure variant of FTP that uses SSL/TLS (Secure Sockets Layer/Transport Layer Security) for encryption.
+    Features: Secures FTP connections, offering data confidentiality and integrity.
+    Security: Encrypts the control and/or data channels, depending on the configuration (explicit or implicit FTPS). 
+
+4. Server Message Block (SMB) / Common Internet File System (CIFS):
+
+    Description:
+    A network file sharing protocol primarily used in Windows environments for sharing files, printers, and other resources. CIFS is an older dialect of SMB.
+    Features:
+    Enables clients to access files and resources on remote servers as if they were local.
+    Security:
+    Supports various authentication and encryption mechanisms, including NTLM and Kerberos. 
+
+5. Network File System (NFS):
+
+    Description: A distributed file system protocol that allows a user on a client computer to access files over a network as if they were local storage. Primarily used in Unix-like operating systems.
+    Features: Transparent file access, allowing clients to mount remote directories and interact with them as local.
+    Security: Can be secured using various methods, including Kerberos authentication. 
+
+6. Hypertext Transfer Protocol (HTTP/HTTPS):
+
+    Description: While primarily for web content, HTTP (and its secure counterpart HTTPS) can also be used for file downloads and uploads, particularly for smaller files or web-based file management interfaces.
+    Features: Widely supported, easy to use in web browsers.
+    Security: HTTPS provides encryption and authentication, securing file transfers over the web.
