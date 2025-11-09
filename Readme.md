@@ -1,116 +1,99 @@
-# Network File Sharing System with TLS Encryption (C++)
+# 🔐 Secure Network File Sharing System (C++ / TLS)
 
-A secure, multi-client file sharing system implemented in C++ using TCP sockets and OpenSSL (TLS).  
-Supports secure login, file upload/download, directory management, multi-client access, and audit logs — a minimal encrypted file server (FTP-like).
+A multi-client encrypted file sharing system built in C++17 using TCP sockets and OpenSSL (TLS).
+It provides secure login, encrypted file transfer, and audit logging — a minimal TLS-protected FTP-like server.
 
----
+## 🚀 Features
 
-## Features
+- TLS Encryption (OpenSSL) — Secure communication channel
+- Authentication System — Username/password stored in users.txt
+- File Operations
+  - LIST — List directory contents
+  - GET / PUT — File download & upload
+  - MKDIR / RM — Manage directories and files
+- Audit Logging — Logs all client actions (logs/server.log)
+- Multi-threaded Server — Concurrent client handling
+- Cross-Platform — Works on Linux, WSL, and Windows (MinGW/MSYS2)
 
-- TLS encrypted communication (OpenSSL)
-- Username/password authentication (users.txt)
-- File operations: LIST, GET, PUT, MKDIR, RM
-- Per-action audit logging (logs/server.log)
-- Multi-threaded server (concurrent client handling)
-- Custom text command protocol over TLS
-- Cross-platform: Linux and Windows (MinGW/MSYS2)
-- C++17, std::filesystem, std::thread
-
----
-
-## Project Structure
-
+## 📁 Directory Layout
+```
 project/
-- server.cpp      — TLS secured server
-- client.cpp      — TLS secured client
-- server.crt          — Server certificate (example)
-- server.key          — Server private key (example)
-- users.txt           — Credentials file (username:password:role)
-- server_files/       — Server storage directory
-- downloads/          — Client downloads folder
-- logs/               — Server logs (logs/server.log)
+├── server.cpp           # TLS-secured server
+├── client.cpp           # TLS-secured client
+├── server.crt           # Server certificate (example)
+├── server.key           # Server private key (example)
+├── users.txt           # User credentials (username:password:role)
+├── server_files/       # Server-side storage
+├── downloads/          # Client download folder
+└── logs/
+    └── server.log      # Server audit logs
+```
 
----
+## ⚙️ Requirements
 
-## Prerequisites
-
-Linux (Debian/Ubuntu/WSL)
-- build-essential, pkg-config, libssl-dev
-
-Fedora / RHEL / CentOS
-- openssl-devel, gcc-c++
-
-Windows (MSYS2 / MinGW64)
-- mingw-w64 toolchain, mingw-w64-openssl
-
----
-
-## Install / Setup
-
-Ubuntu / Debian / WSL:
+### Linux (Debian/Ubuntu/WSL)
 ```bash
 sudo apt update
 sudo apt install -y build-essential pkg-config libssl-dev
 ```
 
-Fedora / RHEL:
+### Fedora / RHEL / CentOS
 ```bash
 sudo dnf install -y openssl-devel gcc-c++ pkgconf
 ```
 
-MSYS2 / MinGW64 (Windows):
+### Windows (MSYS2 / MinGW64)
 ```bash
 pacman -S mingw-w64-x86_64-toolchain mingw-w64-x86_64-openssl
 ```
 
-Generate a self-signed TLS certificate (for testing):
+## 🔑 TLS Certificate Setup
+
+Create a self-signed certificate for local testing:
 ```bash
 openssl req -x509 -nodes -newkey rsa:2048 \
   -keyout server.key -out server.crt -days 365 \
   -subj "/CN=localhost"
 ```
-Copy `server.crt` to the client folder so the client can validate the server certificate (or disable validation only for testing).
 
----
+⚠️ Copy server.crt to the client directory to allow certificate validation.
 
-## Build
+## 🧰 Build Instructions
 
-Linux / WSL:
+### Linux / WSL
 ```bash
 g++ -std=c++17 server.cpp -o server -lssl -lcrypto -lpthread
 g++ -std=c++17 client.cpp -o client -lssl -lcrypto
 ```
 
-Windows (MSYS2 / MinGW64):
+### Windows (MSYS2 / MinGW64)
 ```bash
 g++ -std=c++17 server.cpp -o server.exe -lssl -lcrypto -lws2_32 -lpthread
 g++ -std=c++17 client.cpp -o client.exe -lssl -lcrypto -lws2_32
 ```
 
-Run:
+## ▶️ Run the Application
 ```bash
-# Start server
+# Terminal 1
 ./server
 
-# Start client (in separate terminal)
+# Terminal 2
 ./client
 ```
 
----
+## 💻 Client Command Reference
 
-## Usage (Client Commands)
+| Command | Description |
+|---------|-------------|
+| LIST | List files/directories on the server |
+| GET \<remote_path\> | Download a file to downloads/ |
+| PUT \<local_path\> [remote_path] | Upload a file to the server |
+| MKDIR \<remote_dir\> | Create a directory on the server |
+| RM \<remote_path\> | Remove a file or directory |
+| EXIT | Close the connection |
 
-After connecting and authenticating, the client supports:
-
-- LIST — List files and directories in the server storage root
-- GET <remote_path> — Download file from server to client `downloads/`
-- PUT <local_path> [remote_path] — Upload local file to server
-- MKDIR <remote_dir> — Create directory on server
-- RM <remote_path> — Delete file or directory on server
-- EXIT — Close connection
-
-Example session:
-```
+Example:
+```bash
 LIST
 GET server_files/example.txt
 PUT downloads/newfile.txt server_files/newfile.txt
@@ -119,68 +102,66 @@ RM server_files/oldfile.txt
 EXIT
 ```
 
----
+## 🔐 Authentication
 
-## Authentication
-
-Credentials are stored in `users.txt` in the format:
+users.txt format:
 ```
 username:password:role
 ```
+
 Example:
 ```
 admin:1234:admin
 user:pass:user
 ```
 
-Modify or extend `users.txt` to add users.
+Extend or modify users.txt to manage authorized users.
 
----
+## 📝 Logging & Auditing
 
-## Logging & Auditing
+All user actions are logged in:
+```
+logs/server.log
+```
 
-All client actions are logged to `logs/server.log` with timestamps and client identifiers. Inspect this file for activity auditing and debugging.
+Each log entry includes:
+- Timestamp
+- Client address
+- Username
+- Action performed
 
----
+## 🔒 Security Overview
 
-## Security Notes
+- All traffic is protected by TLS encryption
+- Use CA-signed certificates for production
+- Securely store private keys (chmod 600)
+- Replace plaintext passwords with hashed (bcrypt / Argon2)
+- Sanitize file paths to prevent directory traversal
 
-- TLS handshake ensures confidentiality and integrity of traffic.
-- For production use:
-  - Use certificates signed by a trusted CA.
-  - Protect private keys and use proper file permissions.
-  - Consider storing users in a database (SQLite) and hashing passwords (bcrypt/argon2).
-  - Implement strong input validation and path traversal protection.
+## ✅ Testing Checklist
 
----
+| Test | Status |
+|------|---------|
+| Multi-client connections | ✅ |
+| User login & authentication | ✅ |
+| File upload/download | ✅ |
+| Action logging | ✅ |
+| TLS-encrypted channel | ✅ |
 
-## Testing Checklist
+## 🌟 Future Enhancements
 
-- [x] Connect multiple clients
-- [x] Login authentication
-- [x] Upload / download files
-- [x] View server logs
-- [x] TLS encrypted channel
+- GUI Client (Qt / Python)
+- Resume interrupted transfers
+- SQLite user database
+- AES-256 per-file encryption
+- JWT-based session authentication
+- Cloud deployment (AWS / GCP)
 
----
+## 👤 Author
 
-## Future Enhancements
+Parthdharya Basa  
+Capstone Project: Network & System Programming
 
-- GUI client (Qt / Python)
-- Resume broken downloads
-- SQLite or other DB for users
-- Per-file encryption (AES-256)
-- JWT authentication
-- Cloud deployment (AWS/GCP)
+## 🧩 Tech Stack
 
----
-
-## Author
-
-Anirban Sarangi — Capstone Project: Network & System Programming
-
----
-
-## Tech Stack
-
-C++ • Linux • OpenSSL • Socket Programming
+C++17 • OpenSSL (TLS) • Socket Programming • Multithreading • Filesystem API
